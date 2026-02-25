@@ -1,22 +1,13 @@
-# ---- Stage 1: builder ----
-FROM alpine:3.22 AS ffmpeg_builder
-RUN apk add --no-cache ffmpeg
+FROM alpine:latest AS alpine
 
-# ---- Stage 2: image finale hardened ----
 FROM n8nio/n8n:latest
+
+# Restore apk (removed from hardened n8n image) from a matching Alpine runtime.
+COPY --from=alpine /sbin/apk /sbin/apk
+COPY --from=alpine /usr/lib/libapk.so* /usr/lib/
 
 USER root
 
-# créer un user non-root si nécessaire
-RUN addgroup -S node && adduser -S node -G node
-
-# copier ffmpeg + libs
-COPY --from=ffmpeg_builder /usr/bin/ffmpeg /usr/bin/ffmpeg
-COPY --from=ffmpeg_builder /usr/bin/ffprobe /usr/bin/ffprobe
-COPY --from=ffmpeg_builder /usr/lib/ /usr/lib/
-COPY --from=ffmpeg_builder /lib/ /lib/
-
-# permissions
-RUN chown -R node:node /usr/bin/ffmpeg /usr/bin/ffprobe
+RUN apk add --no-cache ffmpeg
 
 USER node
