@@ -3,7 +3,7 @@ FROM alpine:3.22 AS ffmpeg_builder
 RUN apk add --no-cache ffmpeg
 
 # ---- Stage 2: image finale hardened ----
-FROM n8nio/n8n:latest   # ⚠️ remplace par EXACTEMENT l'image utilisée par Railway
+FROM n8nio/n8n:latest
 
 USER root
 
