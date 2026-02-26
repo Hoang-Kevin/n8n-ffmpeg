@@ -9,5 +9,3 @@ COPY --from=alpine /usr/lib/libapk.so* /usr/lib/
 USER root
 
 RUN apk add --no-cache ffmpeg
-
-USER node
